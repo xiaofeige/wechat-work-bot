@@ -1,4 +1,4 @@
-module github.com/wechat-work-bot
+module github.com/xiaofeige/wechat-work-bot
 
 go 1.15
 
