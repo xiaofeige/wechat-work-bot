@@ -7,7 +7,7 @@ import (
 type MsgHandler interface {
 
 	// 机器人id
-	RobotId()string
+	RobotId() string
 
 	// 普通文本 & 图片消息处理
 	OnMsgRecv(ctx context.Context, msg *CallBackReq) (rsp *CallBackRsp, err error)
@@ -29,11 +29,55 @@ type MsgHandler interface {
 	OnAttachmentEvent(ctx context.Context, msg *CallBackReq) (rsp *CallBackRsp, err error)
 }
 
-
-type DefaultHandler struct {
+type BaseHandler struct {
 }
 
-func (h *DefaultHandler)RobotId()string{
+func (h *BaseHandler) RobotId() string {
+	return "default"
+}
+
+func (h *BaseHandler) OnMsgRecv(ctx context.Context, msg *CallBackReq) (rsp *CallBackRsp, err error) {
+	rsp = &CallBackRsp{
+		StrMsgType: WxTextMsg,
+		//Markdown:      MarkdownElem{},
+		Text: TextRspElem{
+			Content: CDATA{Value: "I'm rich!!!"},
+			//MentionedList: MentionedListElem{},
+		},
+		BIgnore: false,
+	}
+
+	return rsp, nil
+}
+
+func (h *BaseHandler) OnEnterChat(ctx context.Context, msg *CallBackReq) (rsp *CallBackRsp, err error) {
+
+	return &CallBackRsp{BIgnore: true}, nil
+}
+
+func (h *BaseHandler) OnAddToChat(ctx context.Context, msg *CallBackReq) (rsp *CallBackRsp, err error) {
+
+	return &CallBackRsp{BIgnore: true}, nil
+}
+
+func (h *BaseHandler) OnDeletedFromChat(ctx context.Context, msg *CallBackReq) (rsp *CallBackRsp, err error) {
+
+	return &CallBackRsp{BIgnore: true}, nil
+}
+
+func (h *BaseHandler) OnAttachmentEvent(ctx context.Context, msg *CallBackReq) (rsp *CallBackRsp, err error) {
+
+	return &CallBackRsp{BIgnore: true}, nil
+}
+
+//========================================
+// 默认的处理
+//========================================
+type DefaultHandler struct {
+	*BaseHandler
+}
+
+func (h *DefaultHandler) RobotId() string {
 	return "default"
 }
 
@@ -49,24 +93,4 @@ func (h *DefaultHandler) OnMsgRecv(ctx context.Context, msg *CallBackReq) (rsp *
 	}
 
 	return rsp, nil
-}
-
-func (h *DefaultHandler) OnEnterChat(ctx context.Context, msg *CallBackReq) (rsp *CallBackRsp, err error) {
-
-	return &CallBackRsp{BIgnore: true}, nil
-}
-
-func (h *DefaultHandler) OnAddToChat(ctx context.Context, msg *CallBackReq) (rsp *CallBackRsp, err error) {
-
-	return &CallBackRsp{BIgnore: true}, nil
-}
-
-func (h *DefaultHandler) OnDeletedFromChat(ctx context.Context, msg *CallBackReq) (rsp *CallBackRsp, err error) {
-
-	return &CallBackRsp{BIgnore: true}, nil
-}
-
-func (h *DefaultHandler) OnAttachmentEvent(ctx context.Context, msg *CallBackReq) (rsp *CallBackRsp, err error) {
-
-	return &CallBackRsp{BIgnore: true}, nil
 }
