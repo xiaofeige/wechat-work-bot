@@ -2,18 +2,19 @@ package main
 
 import (
 	"context"
-	wechat_work_bot "github.com/wechat-work-bot"
+	wechat_work_bot "github.com/xiaofeige/wechat-work-bot"
 )
 
 type ExampleHandler struct {
+	*wechat_work_bot.BaseHandler
 }
 
-func NewExamplerHandler()(*ExampleHandler, error){
+func NewExampleHandler() (*ExampleHandler, error) {
 	h := &ExampleHandler{}
 	return h, nil
 }
 
-func (h *ExampleHandler)RobotId()string{
+func (h *ExampleHandler) RobotId() string {
 	// webhook: https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=da1b0595-cd46-4b43-bc3a-b04e0e3a2bca
 	return "da1b0595-cd46-4b43-bc3a-b04e0e3a2bca"
 }

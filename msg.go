@@ -4,16 +4,14 @@ import (
 	"encoding/xml"
 )
 
-
 const (
-	WxTextMsg = "text"
+	WxTextMsg     = "text"
 	WxMarkdownMsg = "markdown"
 
-	WxEventMsg    = "event"
-	WxMixedMsg    = "mixed"
-	WxImgMsg      = "image"
+	WxEventMsg = "event"
+	WxMixedMsg = "mixed"
+	WxImgMsg   = "image"
 )
-
 
 const (
 	EventTypeAddToChat      = "add_to_chat"
@@ -29,7 +27,7 @@ type EncryptedReq struct {
 }
 
 //=======================================================
-// 解密之后的消息
+// 回调解密之后的消息
 //=======================================================
 type MentionedListElem struct {
 	Items []CDATA `xml:"Item"`
@@ -47,8 +45,13 @@ type EventElem struct {
 }
 
 type ActionsElem struct {
-	Name  string `xml:"Name"`
-	Value string `xml:"Value"`
+	Name        string `xml:"Name"`
+	Value       string `xml:"Value"`
+	Text        CDATA  `xml:"Text"`
+	Type        string `xml:"Type"`
+	BorderColor string `xml:"BorderColor"`
+	TextColor   string `xml:"TextColor"`
+	ReplaceText CDATA  `xml:"ReplaceText"`
 }
 
 type AttachmentElem struct {
@@ -95,12 +98,18 @@ func NewWxWorkMessage(data []byte) (*CallBackReq, error) {
 }
 
 //=======================================================
-// 企业微信消息回包
+// 企业微信回调消息回包
 //=======================================================
 type CDATA struct {
 	Value string `xml:",cdata"`
 }
+
+type MarkdownSubElem struct {
+	Content    CDATA          `xml:"Content"`
+	Attachment AttachmentElem `xml:"Attachment"`
+}
 type MarkdownElem struct {
+	Markdown MarkdownSubElem `xml:"Markdown"`
 }
 
 type TextRspElem struct {
@@ -123,4 +132,26 @@ type EncryptedRsp struct {
 	MsgSign    CDATA    `xml:"MsgSignature"`
 	Timestamp  int64    `xml:"TimeStamp"`
 	Nonce      CDATA    `xml:"Nonce"`
+}
+
+//=======================================================
+// 拉取群聊群聊信息回包
+//=======================================================
+type BaseResponse struct {
+	ErrCode int    `json:"errcode"`
+	ErrMsg  string `json:"errmsg"`
+}
+
+type MemberItem struct {
+	UserId string `json:"userid"`
+	Alias  string `json:"alias"`
+	Name   string `json:"name"`
+}
+
+type GroupInfoRsp struct {
+	BaseResponse
+	ChatId   string       `json:"chatid"`
+	Name     string       `json:"name"`
+	ChatType string       `json:"chattype"`
+	Members  []MemberItem `json:"members"`
 }

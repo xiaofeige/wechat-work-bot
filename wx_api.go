@@ -2,6 +2,7 @@ package wechat_work_bot
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -11,7 +12,7 @@ import (
 //===========================================
 // 本包主要包含企业微信接口api
 //===========================================
-func SendRobotMsg(msgType string, alarmUrl, content string) error{
+func SendRobotMsg(msgType string, alarmUrl, content string) error {
 
 	msgData := make(map[string]interface{})
 
@@ -48,4 +49,26 @@ func sendRobotMsg(alarmUrl string, jsonData []byte) error {
 		return fmt.Errorf("call send msg err, http code:%d, body:%s", rsp.StatusCode, string(bodyData))
 	}
 	return nil
+}
+
+//获取群聊资料
+func GetGroupChatInfo(ctx context.Context, groupInfoUrl string) (*GroupInfoRsp, error) {
+
+	httpRsp, err := http.Get(groupInfoUrl)
+	if err != nil {
+		return nil, err
+	}
+
+	bodyData, err := ioutil.ReadAll(httpRsp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	var rsp GroupInfoRsp
+	err = json.Unmarshal(bodyData, &rsp)
+	if err != nil {
+		return nil, err
+	}
+
+	return &rsp, nil
 }

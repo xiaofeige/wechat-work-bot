@@ -23,7 +23,7 @@ type MsgHandler interface {
 	OnDeletedFromChat(ctx context.Context, msg *CallBackReq) (rsp *CallBackRsp, err error)
 
 	// 有人加入群聊
-	//OnGroupAddMember(ctx context.Context, msg *CallBackReq)(rsp *CallBackRsp, err error)
+	OnGroupAddMember(ctx context.Context, msg *CallBackReq) (rsp *CallBackRsp, err error)
 
 	// 附加事件
 	OnAttachmentEvent(ctx context.Context, msg *CallBackReq) (rsp *CallBackRsp, err error)
@@ -66,6 +66,10 @@ func (h *BaseHandler) OnDeletedFromChat(ctx context.Context, msg *CallBackReq) (
 }
 
 func (h *BaseHandler) OnAttachmentEvent(ctx context.Context, msg *CallBackReq) (rsp *CallBackRsp, err error) {
+
+	return &CallBackRsp{BIgnore: true}, nil
+}
+func (h *BaseHandler) OnGroupAddMember(ctx context.Context, msg *CallBackReq) (rsp *CallBackRsp, err error) {
 
 	return &CallBackRsp{BIgnore: true}, nil
 }

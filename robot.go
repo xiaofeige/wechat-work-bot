@@ -13,13 +13,11 @@ import (
 	"time"
 )
 
-
 type RobotConfig struct {
-
 	ReceiveId string `default:""` // 在群聊机器人场景中，直接传空字符串
 
 	// 申请机器人时的 token
-	Token     string	`default:""`
+	Token string `default:""`
 	// 申请机器人的时候的base64 编码的aeskey
 	TokenAESKey string
 	// base64 解码之后的aeskey, 传入config的时候不需要指定
@@ -27,31 +25,31 @@ type RobotConfig struct {
 
 	WebHookUrl string //企业微信推送消息地址
 
-	BindAddr 	string	`default:":8080"` //
+	BindAddr string `default:":8080"` //
 
-	UrlBase		string 	`default:"/"`
+	UrlBase string `default:"/"`
 
 	// 消息处理接口
 	Handler MsgHandler
 
 	//
-	Debugger 		Logger
+	Debugger Logger
 
 	//
-	ErrLogger 		Logger
+	ErrLogger Logger
 }
 
 type Robot struct {
 	conf *RobotConfig
 	*gin.Engine
 
-	handlers 	map[string]MsgHandler
+	handlers map[string]MsgHandler
 
 	//
-	Debugger 		Logger
+	Debugger Logger
 
 	//
-	ErrLogger 		Logger
+	ErrLogger Logger
 }
 
 // 创建wx-work robot回调机器人
@@ -59,7 +57,7 @@ func NewWxWorkRobot(conf RobotConfig) (*Robot, error) {
 
 	aseKey, err := base64.StdEncoding.DecodeString(conf.TokenAESKey + "=") // 不知道为啥这样设计，要这里自己手动添加等号
 	if err != nil {
-		fmt.Println("aes key[%s] base64 decode err:%v", conf.TokenAESKey, err)
+		fmt.Printf("aes key[%s] base64 decode err:%v\n", conf.TokenAESKey, err)
 		return nil, err
 	}
 	conf.aesKey = aseKey
@@ -69,8 +67,8 @@ func NewWxWorkRobot(conf RobotConfig) (*Robot, error) {
 	}
 
 	robot := &Robot{
-		conf:    &conf,
-		Engine:  gin.Default(),
+		conf:   &conf,
+		Engine: gin.Default(),
 	}
 
 	return robot, nil
@@ -239,18 +237,18 @@ func (r *Robot) OnRecvMsg(ctx *gin.Context) {
 func (r *Robot) HandleMsg(ctx context.Context, req *CallBackReq) (rsp *CallBackRsp, err error) {
 
 	urlParams, err := url.Parse(req.WebHookUrl)
-	if err != nil{
+	if err != nil {
 		r.ErrLogger.Printf("parse webhook url err:%v", err)
 		return nil, err
 	}
 	vals, err := url.ParseQuery(urlParams.RawQuery)
-	if err != nil{
+	if err != nil {
 		r.ErrLogger.Printf("parse raw query err:%v", err)
 		return nil, err
 	}
 	robotId := vals.Get("key")
 	handler, exist := r.handlers[robotId]
-	if !exist{
+	if !exist {
 		r.ErrLogger.Printf("robot id:%s handler is not found, using default handler", robotId)
 		handler = &DefaultHandler{}
 	}
