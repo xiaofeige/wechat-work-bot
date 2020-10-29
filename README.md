@@ -11,25 +11,31 @@ go get github.com/xiaofeige/wechat-work-bot
 ```
 
 ## example
-look into the example dir
+参考`example`目录下的实现 
 ```
 // create handler which implement the wx callback msg handler
-h, err := NewExamplerHandler()
-if err != nil{
-    fmt.Println("new example handler err:", err)
-    return
+type ExampleHandler struct{
+    *BaseHandler
 }
 
-var conf ExampleConfig
-_, err = toml.Decode("./config.toml", &conf)
-if err != nil{
-    fmt.Println("parse config err:", err)
-    return
+// 覆盖默认的事件响应函数
+func (h *ExampleHandler)OnMsgRecv(ctx context.Context, msg *CallBackReq) (rsp *CallBackRsp, err error){
+    return &CallbackRsp{}, nil
 }
 
+```
+
+添加handler到机器人
+```
+h := &ExampleHandler{}
 robot, err := wechat_work_bot.NewWxWorkRobot(conf.RobotConf)
 if err != nil{
-    fmt.Println("")
+    fmt.Println("error")
+    return
 }
 robot.AddHandler(h)
+robot.Start()
 ```
+
+## 如何添砖加瓦
+希望我们的合作模式是 fork&pull-request

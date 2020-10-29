@@ -66,6 +66,14 @@ func NewWxWorkRobot(conf RobotConfig) (*Robot, error) {
 		conf.Handler = &DefaultHandler{}
 	}
 
+	if conf.Debugger == nil {
+		conf.Debugger = DefaultLogger
+	}
+
+	if conf.ErrLogger == nil {
+		conf.ErrLogger = DefaultLogger
+	}
+
 	robot := &Robot{
 		conf:   &conf,
 		Engine: gin.Default(),
