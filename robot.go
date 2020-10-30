@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"net/url"
 	"strconv"
 	"time"
 )
@@ -243,18 +242,12 @@ func (r *Robot) OnRecvMsg(ctx *gin.Context) {
 }
 
 func (r *Robot) HandleMsg(ctx context.Context, req *CallBackReq) (rsp *CallBackRsp, err error) {
+	robotId, err := GetRobotIdByHookUrl(req.WebHookUrl)
+	if err != nil {
+		r.ErrLogger.Printf("get robot id from callback req err:%v", err)
+		return nil, err
+	}
 
-	urlParams, err := url.Parse(req.WebHookUrl)
-	if err != nil {
-		r.ErrLogger.Printf("parse webhook url err:%v", err)
-		return nil, err
-	}
-	vals, err := url.ParseQuery(urlParams.RawQuery)
-	if err != nil {
-		r.ErrLogger.Printf("parse raw query err:%v", err)
-		return nil, err
-	}
-	robotId := vals.Get("key")
 	handler, exist := r.handlers[robotId]
 	if !exist {
 		r.ErrLogger.Printf("robot id:%s handler is not found, using default handler", robotId)
