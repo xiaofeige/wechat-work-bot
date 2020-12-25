@@ -74,8 +74,10 @@ func NewWxWorkRobot(conf RobotConfig) (*Robot, error) {
 	}
 
 	robot := &Robot{
-		conf:   &conf,
-		Engine: gin.Default(),
+		conf:      &conf,
+		Engine:    gin.Default(),
+		Debugger:  conf.Debugger,
+		ErrLogger: conf.ErrLogger,
 	}
 
 	return robot, nil
