@@ -1,0 +1,13 @@
+[Business]
+# add your business config
+
+
+[RobotConf]
+# 你在企业微信上创建的机器人时的配置
+ReceiveId="12ac4f7b-883d-487a-a90d-c504eea860a2"
+Token=""
+TokenAESKey=""
+WebHookUrl="https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=12ac4f7b-883d-487a-a90d-c504eea860a2"
+
+BindAddr="127.0.0.1:8080"
+UrlBase="/"
