@@ -12,7 +12,7 @@ import (
 //===========================================
 // 本包主要包含企业微信接口api
 //===========================================
-func SendRobotMsg(msgType string, alarmUrl, content string) error {
+func SendRobotMsg(msgType string, strWebHookUrl, content string) error {
 
 	msgData := make(map[string]interface{})
 
@@ -25,11 +25,54 @@ func SendRobotMsg(msgType string, alarmUrl, content string) error {
 	if err != nil {
 		return err
 	}
-	return sendRobotMsg(alarmUrl, jsonData)
+	return sendRobotMsg(strWebHookUrl, jsonData)
 }
 
-func sendRobotMsg(alarmUrl string, jsonData []byte) error {
-	req, err := http.NewRequest(http.MethodPost, alarmUrl, bytes.NewReader(jsonData))
+// 通用发送消息函数, 可以参考下述方式发送消息，简单易实现
+//content := map[string]interface{}{
+//		"msgtype": "markdown",
+//		//"visible_to_user": "fayren", //诶，就是不开启这个
+//		"markdown": map[string]interface{}{
+//			"content": "",
+//			"at_short_name": true,
+//			"attachments": []map[string]interface{}{
+//				map[string]interface{}{
+//					"callback_id": "on_click_confirm",
+//					"actions": []map[string]interface{}{
+//						map[string]interface{}{
+//							"name": "agree",
+//							"text": "准奏",
+//							"type": "button",
+//							"value": "agree",
+//							"replace_text": "谢主隆恩",
+//							"border_color": "2EAB49",
+//							"text_color": "2EAB49",
+//						},
+//
+//						map[string]interface{}{
+//							"name": "reject",
+//							"text": "此事再议",
+//							"type": "button",
+//							"value": "reject",
+//							"replace_text": "谢主隆恩",
+//							"border_color": "2EAB49",
+//							"text_color": "2EAB49",
+//						},
+//					},
+//				},
+//			},
+//		},
+//	}
+func SendWxRobotMsg(strWebHookUrl string, data interface{}) error {
+	jsonData, err := json.Marshal(data)
+	if err != nil {
+		return err
+	}
+	return sendRobotMsg(strWebHookUrl, jsonData)
+}
+
+func sendRobotMsg(strWebHookUrl string, jsonData []byte) error {
+	req, err := http.NewRequest(http.MethodPost, strWebHookUrl, bytes.NewReader(jsonData))
 	if err != nil {
 		return err
 	}
