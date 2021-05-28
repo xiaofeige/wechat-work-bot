@@ -78,6 +78,7 @@ func NewWxWorkRobot(conf RobotConfig) (*Robot, error) {
 		Engine:    gin.Default(),
 		Debugger:  conf.Debugger,
 		ErrLogger: conf.ErrLogger,
+		handlers:  make(map[string]MsgHandler),
 	}
 
 	return robot, nil
