@@ -37,14 +37,18 @@ func (h *BaseHandler) RobotId() string {
 }
 
 func (h *BaseHandler) OnMsgRecv(ctx context.Context, msg *CallBackReq) (rsp *CallBackRsp, err error) {
+	//rsp = &CallBackRsp{
+	//	StrMsgType: WxTextMsg,
+	//	//Markdown:      MarkdownElem{},
+	//	Text: TextRspElem{
+	//		Content: CDATA{Value: "I'm rich!!!"},
+	//		//MentionedList: MentionedListElem{},
+	//	},
+	//	BIgnore: false,
+	//}
+
 	rsp = &CallBackRsp{
-		StrMsgType: WxTextMsg,
-		//Markdown:      MarkdownElem{},
-		Text: TextRspElem{
-			Content: CDATA{Value: "I'm rich!!!"},
-			//MentionedList: MentionedListElem{},
-		},
-		BIgnore: false,
+		BIgnore: true,
 	}
 
 	return rsp, nil
