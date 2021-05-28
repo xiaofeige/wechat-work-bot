@@ -17,6 +17,7 @@ const (
 	EventTypeAddToChat      = "add_to_chat"
 	EventTypeDeleteFromChat = "delete_from_chat"
 	EventTypeEnterChat      = "enter_chat"
+	EventTypeAttachment     = "attachment"
 )
 
 //=======================================================

@@ -268,6 +268,8 @@ func (r *Robot) HandleMsg(ctx context.Context, req *CallBackReq) (rsp *CallBackR
 			return handler.OnDeletedFromChat(ctx, req)
 		case EventTypeEnterChat:
 			return handler.OnEnterChat(ctx, req)
+		case EventTypeAttachment:
+			return handler.OnAttachmentEvent(ctx, req)
 		default:
 			r.ErrLogger.Printf("unsupported event type:%s", req.Event.EventType)
 			return &CallBackRsp{BIgnore: true}, nil
