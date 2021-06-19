@@ -6,6 +6,7 @@ import (
 	"encoding/binary"
 	"encoding/xml"
 	"fmt"
+	"github.com/facebookgo/grace/gracehttp"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
@@ -93,10 +94,13 @@ func (r *Robot) Start() {
 	r.Handle(http.MethodPost, r.conf.UrlBase, r.OnRecvMsg)
 
 	r.Debugger.Printf("running config:\n %s", StructToJson(r.conf))
-	err := r.Run(r.conf.BindAddr)
-	if err != nil {
-		r.ErrLogger.Printf("robot exit...err:%v", err)
+
+	svr := &http.Server{
+		Addr:    r.conf.BindAddr,
+		Handler: r,
 	}
+
+	gracehttp.Serve(svr)
 }
 
 func (r *Robot) Encrypt(origData []byte) (string, error) {
